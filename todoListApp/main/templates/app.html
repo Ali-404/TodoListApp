@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if message and messageType %}
+<div class="alert alert-{{messageType}} alert-dismissible fade show" role="alert">
+  <strong>{{ messageType }}!</strong> {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+{% if not user.is_authenticated %}
+<div class="min-vh-100 d-flex align-items-center justify-content-between">
+  <h1 class="text-danger text-center w-100 ">You are not logged in yet ! <a class="link-primary" href="../login/">LogIn</a></h1>
+
+</div>
+
+{% else %}
+  <div class="d-flex flex-column container  align-items-center p-5 ">
+      
+      <h1>Welcome {{ account.get_username }}</h1>
+      <hr class="w-100 shadow">
+      <h1 class="text-center text-md-start w-100">Todo Lists</h1>
+          <div class="cards  gap-2 d-flex flex-wrap w-100 align-items-center justify-content-center p-5">
+            {% if todoListsLen > 0 %}
+              {% for x in todoLists %}  
+              <div class="card flex-md-grow-0 flex-grow-1  border-primary mb-3 shadow" style="max-width: 18rem;min-width: 25%;">
+                    <div class="card-header bg-transparent border-primary d-flex align-items-center justify-content-between">
+                      <p class="text-center">Todo #{{ x.id }}</p>
+                      <a href="../remove_todo/{{ x.id }}" class="btn btn-close btn-danger"></a>
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">{{ x.title }}</h5>
+                      <div class="card-text">
+                        <a href="../task/{{x.id}}" class="btn btn-primary shadow">Open</a>
+                      </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-primary">{{ x.created_at }}</div>
+                </div>
+                {% endfor %}
+              {% else %}
+
+                <small>You have no Todo Lists Yet.</small>
+
+              {% endif %}
+              
+        
+
+              
+          </div>
+
+          {% if message and messageType %}
+            <div class="alert alert-{{messageType}} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+          
+          <div class="w-100 my-2 p-3 bg-light shadow-lg rounded rounded-2" style="position: fixed; top: 100%; transform: translateY(-100%);">
+            <form action="../add_todo/" method="post" class="container d-flex gap-2 flex-column flex-md-row">
+              {% csrf_token %}
+
+              <input name="todoListName" type="text" required maxlength="70" class="form-control" placeholder="Add new todo list ..">
+              <div class="d-flex align-items-center justify-content-between gap-1">
+                <input type="submit" class="btn btn-primary" value="Add todo list" />
+              <a class="btn btn-light text-danger" href="../logout/">Logout</a>
+              
+              </div>
+            </form>
+          
+          </div>
+
+          
+
+        </div>
+        
+
+    {% endif %}
+
+
+
+{% endblock %}

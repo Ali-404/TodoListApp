@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="min-vh-100 d-flex flex-column container align-items-center justify-content-center">
+    {% if error %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Warning!</strong> {{error}} !.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+
+      {% endif %}
+
+    <form action="../app/" style="min-width: 50%;" method="post" class="form bg-light p-3 rounded-3 shadow">
+        {% csrf_token %}
+        <div class="container-fluid w-75 d-flex flex-column gap-3">
+            <h1 class="text-center">Login</h1>
+            <div>
+                <label class="form-label" for="username"  >Username</label>
+                <input type="text" required class="form-control" id="username" name="username" >
+            </div>
+
+            <div>
+                <label class="form-label" for="username"  >Password</label>
+                <input type="password" required class="form-control" id="password" name="password" >
+            </div>
+
+            <div>
+                <label for="" class="form-label">Forget Password? <a class="link-primary" href="../reset_password" >Reset password</a></label>
+            </div>
+
+            <div>
+                <label for="" class="form-label">Dont have an account yet? <a class="link-success" href="../register" >Register</a></label>
+            </div>
+
+            <div class="w-100 d-flex align-items-center justify-content-center">
+                <input  type="submit" class="btn btn-primary w-75" value="Login">
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+{% endblock %}

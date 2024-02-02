@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .card {
+    cursor: pointer;
+  }
+
+  .checked {
+    text-decoration: line-through;
+    opacity: 0.3;
+    
+  }
+
+  .checked:hover{
+    opacity: 0.7;
+  }
+
+  .unchecked {
+    text-decoration: none;
+  }
+</style>
+
+<div class=" d-flex flex-column container-fluid container-md align-items-center p-5 " >
+  <h1 class="text-center text-md-start w-100 text-capitalize">{{ todoList.title }}</h1>
+  <div class="p-5 w-100 d-flex flex-column gap-1"  style="max-height: 65vh; overflow-y: auto; overflow-x: hidden;">
+    {% if tasksLen <= 0 %}
+      <div class='d-flex w-100 flex-column align-items-center justify-content-center' style="min-height:50vh;">
+        <h4 class='w-100 text-center '>😴 You have nothing to do.</h4>
+
+      </div>
+    {% else %}
+      {% for task in tasks %}
+      <button  class="card flex-md-grow-0 flex-grow-1 shadow text-start" onclick="check(this,'../../save_task/{{ todoList.id }}/{{task.id}}');">
+        <div class="w-100 px-4 d-flex align-items-center justify-content-end position-absolute">
+        <a class="btn btn-close btn-danger" href="../remove_task/{{ todoList.id }}/{{task.id}}" ></a>          
+        </div>
+
+        {% if task.complete %}
+          <div class="card-body checked">
+          
+            <input type="checkbox" checked readonly disabled style="margin-right: 15px;"  >
+              {{ task.content }}
+          </div>
+        {% else %}
+
+          <div class="card-body unchecked">
+          
+            <input type="checkbox" readonly disabled style="margin-right: 15px;"  >
+              {{ task.content }}
+          </div>
+
+        {% endif %}
+
+      </button>
+    {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+<div class="position-absolute w-100 p-3 bg-light shadow-lg" style="top: 100%; transform: translateY(-100%);">
+  <form method="post" action="../create_task/{{todoList.id}}" class="container d-flex gap-2 ">
+    {% csrf_token %}
+    <input type="text" class="form-control" name="content_input" id="content_input" required placeholder="Add new task ..">
+    <input class="btn btn-primary" type="submit" value="Add Task" >
+
+  </form>
+
+</div>
+
+
+<script defer>
+
+
+  function check(e, href){
+    const card = e;
+    if (card.classList.contains("checked")){
+      card.classList.remove("checked")
+      card.classList.add("unchecked")
+      input = card.children[0].children[0]
+      input.removeAttribute("checked")
+
+      
+    }else {
+      card.classList.add("checked")
+      card.classList.remove("unchecked")
+      input = card.children[0].children[0]
+      input.setAttribute("checked", true)
+    }
+
+    // link = href + "/" + complete.toString()
+    window.open(href, '_self').focus()
+  }
+
+</script>
+
+
+{% endblock %}
